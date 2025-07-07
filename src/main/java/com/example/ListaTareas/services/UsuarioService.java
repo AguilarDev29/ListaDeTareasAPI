@@ -5,15 +5,19 @@ import com.example.ListaTareas.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<Usuario> getAll(Pageable pageable){
@@ -33,7 +37,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public void changeUsername(String username, Long id){
+    public void changeUsername(String username, Long id, Usuario usuario){
+
+        if(usuario.getRoles().size() == 1 && usuario.getRoles().contains("USER")){
+            var usuarioToUpdate = usuarioRepository.findById(usuario.getId());
+            usuarioToUpdate.ifPresent(value -> value.setUsername(username));
+        }
+
         var usuarioToUpdate = usuarioRepository.findById(id);
 
         if(usuarioToUpdate.isPresent()){
@@ -43,32 +53,46 @@ public class UsuarioService {
         }
     }
 
-    public void changePassword(String password, Long id){
+    public void changePassword(String password, Long id, Usuario usuario){
+
+        if(usuario.getRoles().size() == 1 && usuario.getRoles().contains("USER")){
+            var usuarioToUpdate = usuarioRepository.findById(usuario.getId());
+            usuarioToUpdate.ifPresent(value -> {
+                value.setPassword(passwordEncoder.encode(password));
+            });
+        }
+
         var usuarioToUpdate = usuarioRepository.findById(id);
 
         if(usuarioToUpdate.isPresent()){
             if(password != null)
-                usuarioToUpdate.get().setPassword(password);
+                usuarioToUpdate.get().setPassword(passwordEncoder.encode(password));
             usuarioRepository.save(usuarioToUpdate.get());
         }
     }
 
-    public void addRol(Usuario.Rol rol, Long id){
-        var usuarioToUpdate = usuarioRepository.findById(id);
+    public void addRol(String rol, Long id) {
+        if (rol.isBlank()) throw new IllegalArgumentException("El rol no puede ser nulo");
 
-        if(usuarioToUpdate.isPresent()){
-            if(rol != null && usuarioToUpdate.get().getRoles().contains(rol))
-                usuarioToUpdate.get().setRoles(rol);
-            usuarioRepository.save(usuarioToUpdate.get());
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
+
+        if (!usuario.getRoles().contains(rol)) {
+            usuario.getRoles().add(rol);
+            usuarioRepository.save(usuario);
         }
     }
 
-    public void deleteRol(Usuario.Rol rol, Long id){
-        var usuarioToUpdate = usuarioRepository.findById(id);
+    public void deleteRol(String rol, Long id) {
+        if (rol.isBlank()) throw new IllegalArgumentException("El rol no puede ser nulo");
 
-        if(usuarioToUpdate.isPresent()){
-            if(rol != null) usuarioToUpdate.get().getRoles().remove(rol);
-            usuarioRepository.save(usuarioToUpdate.get());
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
+
+        if (usuario.getRoles().remove(rol)) {
+
+            if (usuario.getRoles().isEmpty()) usuario.getRoles().add(Usuario.Rol.USER.name());
+            usuarioRepository.save(usuario);
         }
     }
 
