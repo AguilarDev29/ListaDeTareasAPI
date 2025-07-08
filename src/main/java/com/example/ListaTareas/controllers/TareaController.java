@@ -1,5 +1,4 @@
 package com.example.ListaTareas.controllers;
-
 import com.example.ListaTareas.models.tarea.Tarea;
 import com.example.ListaTareas.models.tarea.dto.DtoCrearTarea;
 import com.example.ListaTareas.models.tarea.dto.DtoEditarTarea;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.Map;
 
@@ -48,7 +46,7 @@ public class TareaController {
 
     @GetMapping
     public ResponseEntity<Page<DtoInfoTarea>> getListTareasUsuario(@PageableDefault(size = 5) Pageable pageable,
-                                                                    @AuthenticationPrincipal Usuario usuario) {
+                                                                   @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(tareaService.getTareasByUsuario(usuario, pageable).map(DtoInfoTarea::new));
     }
 
@@ -87,8 +85,8 @@ public class TareaController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DtoInfoTarea> editarTarea(@PathVariable Long id,
-                                                 @RequestBody @Valid DtoEditarTarea datosEditarTarea,
-                                                 @AuthenticationPrincipal Usuario usuario){
+                                                     @RequestBody @Valid DtoEditarTarea datosEditarTarea,
+                                                     @AuthenticationPrincipal Usuario usuario){
         try{
             var tarea = tareaService.updateTarea(new Tarea(datosEditarTarea), id, usuario);
             return ResponseEntity.ok(new DtoInfoTarea(tarea));

@@ -1,5 +1,4 @@
 package com.example.ListaTareas.services;
-
 import com.example.ListaTareas.models.usuario.Usuario;
 import com.example.ListaTareas.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class UsuarioService {

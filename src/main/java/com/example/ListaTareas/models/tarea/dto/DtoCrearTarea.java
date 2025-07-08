@@ -1,7 +1,4 @@
 package com.example.ListaTareas.models.tarea.dto;
-
-import com.example.ListaTareas.models.usuario.Usuario;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

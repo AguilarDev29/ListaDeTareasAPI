@@ -1,16 +1,11 @@
 package com.example.ListaTareas.models.usuario;
-
 import com.example.ListaTareas.models.tarea.Tarea;
-import com.example.ListaTareas.models.usuario.dto.DtoRol;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

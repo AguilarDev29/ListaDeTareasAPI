@@ -1,5 +1,4 @@
 package com.example.ListaTareas.services;
-
 import com.example.ListaTareas.models.tarea.Tarea;
 import com.example.ListaTareas.models.usuario.Usuario;
 import com.example.ListaTareas.repositories.TareaRepository;
@@ -10,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TareaService {
@@ -30,14 +30,14 @@ public class TareaService {
 
     public Page<Tarea> getTareasByUsuario(@AuthenticationPrincipal Usuario usuario,
                                           Pageable pageable){
-        return tareaRepository.findByUsuarioAndEstado(usuario,pageable,
-                                                    Tarea.Estado.PENDIENTE);
+        return tareaRepository.findByUsuarioAndEstadoIn(usuario,pageable,
+                List.of(Tarea.Estado.PENDIENTE, Tarea.Estado.EN_PROGRESO));
     }
 
     public Page<Tarea> getTareasCompletadasByUsuario(@AuthenticationPrincipal Usuario usuario,
                                                      Pageable pageable){
-        return tareaRepository.findByUsuarioAndEstado(usuario,pageable,
-                                                    Tarea.Estado.COMPLETADO);
+        return tareaRepository.findByUsuarioAndEstadoIn(usuario,pageable,
+                List.of(Tarea.Estado.COMPLETADO));
     }
 
     public Tarea getTareaByIdAndUsuario(Long id, Usuario usuario){
@@ -97,7 +97,6 @@ public class TareaService {
     private Tarea verificarTarea(Long tareaId, Usuario usuario){
         return tareaRepository.findById(tareaId)
                 .filter(t -> t.getUsuario().getId().equals(usuario.getId()))
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Tarea no encontrada o no pertenece al usuario"));
+                .orElseThrow(() -> new EntityNotFoundException("Tarea no encontrada o no pertenece al usuario"));
     }
 }

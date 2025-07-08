@@ -1,5 +1,4 @@
 package com.example.ListaTareas.config;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
 
 @Configuration
@@ -43,12 +41,12 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                        //En fase de pruebas
+                        .requestMatchers(HttpMethod.POST, "/v1/email/send").hasRole("DEV")
                         .requestMatchers("/v1/users/**", "/v1/tasks/admin/**").hasAnyRole("ADMIN", "DEV")
-                        .requestMatchers("/v1/tasks/**").hasAnyRole("ADMIN", "USER", "DEV")
-                        .requestMatchers("/v1/users/username/**", "/v1/users/password/**").hasAnyRole("USER")
+                        .requestMatchers("/v1/tasks/admin/**").hasAnyRole("ADMIN", "DEV")
                         .anyRequest().authenticated()
-                )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+                ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
     @Bean

@@ -1,5 +1,4 @@
 package com.example.ListaTareas.models.tarea;
-
 import com.example.ListaTareas.models.tarea.dto.DtoCrearTarea;
 import com.example.ListaTareas.models.tarea.dto.DtoEditarTarea;
 import com.example.ListaTareas.models.usuario.Usuario;
@@ -9,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter

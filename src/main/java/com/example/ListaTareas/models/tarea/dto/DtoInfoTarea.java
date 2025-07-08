@@ -1,12 +1,9 @@
 package com.example.ListaTareas.models.tarea.dto;
-
 import com.example.ListaTareas.models.tarea.Tarea;
-import com.example.ListaTareas.models.usuario.Usuario;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record DtoInfoTarea(
+        Long id,
         String titulo,
         String descripcion,
         Tarea.Estado estado,
@@ -17,6 +14,7 @@ public record DtoInfoTarea(
 ) {
     public DtoInfoTarea(Tarea tarea) {
         this(
+                tarea.getId(),
                 tarea.getTitulo(),
                 tarea.getDescripcion(),
                 tarea.getEstado(),

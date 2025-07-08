@@ -1,5 +1,4 @@
 package com.example.ListaTareas.controllers;
-
 import com.example.ListaTareas.models.usuario.Usuario;
 import com.example.ListaTareas.models.usuario.dto.DtoCambiarPassword;
 import com.example.ListaTareas.models.usuario.dto.DtoCambiarUsername;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.Map;
 
@@ -93,9 +91,9 @@ public class UsuarioController {
     }
 
     @PatchMapping("/username/{id}")
-    public ResponseEntity<Map<String, String>> changeUsername(@RequestBody DtoCambiarUsername username,
-                                                              @PathVariable Long id,
-                                                              @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Map<String, String>> changeUsernameAdmin(@RequestBody DtoCambiarUsername username,
+                                                                    @PathVariable Long id,
+                                                                    @AuthenticationPrincipal Usuario usuario) {
         try{
             var usuarioToUpdate = usuarioService.getUsuarioById(id);
             if(!username.newUsername().isBlank())
@@ -107,9 +105,9 @@ public class UsuarioController {
     }
 
     @PatchMapping("/password/{id}")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestBody DtoCambiarPassword password,
-                                                                @PathVariable Long id,
-                                                                @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Map<String, String>> changePasswordAdmin(@RequestBody DtoCambiarPassword password,
+                                                                    @PathVariable Long id,
+                                                                    @AuthenticationPrincipal Usuario usuario) {
         try{
             var usuarioToUpdate = usuarioService.getUsuarioById(id);
             if(!password.newPassword().isBlank())

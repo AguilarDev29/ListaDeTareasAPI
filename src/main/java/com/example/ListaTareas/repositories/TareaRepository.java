@@ -1,13 +1,12 @@
 package com.example.ListaTareas.repositories;
-
 import com.example.ListaTareas.models.tarea.Tarea;
-import com.example.ListaTareas.models.tarea.dto.DtoInfoTarea;
 import com.example.ListaTareas.models.usuario.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TareaRepository extends JpaRepository<Tarea, Long> {
@@ -18,6 +17,6 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
     Optional<Tarea> findByIdAndUsuario(Long id, Usuario usuario);
 
-    Page<Tarea> findByUsuarioAndEstado(Usuario usuario, Pageable pageable, Tarea.Estado estado);
+    Page<Tarea> findByUsuarioAndEstadoIn(Usuario usuario, Pageable pageable, List<Tarea.Estado> estado);
 
 }
