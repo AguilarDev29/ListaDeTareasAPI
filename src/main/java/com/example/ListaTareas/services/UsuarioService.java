@@ -35,30 +35,17 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public void changeUsername(String username, Long id, Usuario usuario){
-
-        if(usuario.getRoles().size() == 1 && usuario.getRoles().contains("USER")){
-            var usuarioToUpdate = usuarioRepository.findById(usuario.getId());
-            usuarioToUpdate.ifPresent(value -> value.setUsername(username));
-        }
+    public void changeEmail(String email, Long id, Usuario usuario){
 
         var usuarioToUpdate = usuarioRepository.findById(id);
 
         if(usuarioToUpdate.isPresent()){
-            if(username != null)
-                usuarioToUpdate.get().setUsername(username);
+            if(!email.isBlank()) usuarioToUpdate.get().setEmail(email);
             usuarioRepository.save(usuarioToUpdate.get());
         }
     }
 
     public void changePassword(String password, Long id, Usuario usuario){
-
-        if(usuario.getRoles().size() == 1 && usuario.getRoles().contains("USER")){
-            var usuarioToUpdate = usuarioRepository.findById(usuario.getId());
-            usuarioToUpdate.ifPresent(value -> {
-                value.setPassword(passwordEncoder.encode(password));
-            });
-        }
 
         var usuarioToUpdate = usuarioRepository.findById(id);
 
@@ -88,7 +75,6 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
 
         if (usuario.getRoles().remove(rol)) {
-
             if (usuario.getRoles().isEmpty()) usuario.getRoles().add(Usuario.Rol.USER.name());
             usuarioRepository.save(usuario);
         }

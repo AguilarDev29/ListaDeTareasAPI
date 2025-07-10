@@ -1,6 +1,6 @@
 package com.example.ListaTareas.services;
 
-import com.example.ListaTareas.models.DtoEmailBody;
+import com.example.ListaTareas.models.others.DtoEmailBody;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,14 +17,14 @@ public class EmailService{
         this.sender = sender;
     }
 
-    public boolean sendEmail(DtoEmailBody emailBody)  {
+    public boolean sendEmail(DtoEmailBody emailBody) throws MessagingException {
         return sendEmailTool(emailBody.content(),emailBody.email(), emailBody.subject());
     }
 
-    private boolean sendEmailTool(String textMessage, String email,String subject) {
+    private boolean sendEmailTool(String textMessage, String email,String subject) throws MessagingException {
         boolean send = false;
         MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         try {
             helper.setTo(email);
             helper.setText(textMessage, true);
@@ -32,9 +32,9 @@ public class EmailService{
             sender.send(message);
             send = true;
             System.out.println("Mail enviado!");
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             System.out.println("Error al enviar correo:");
-            e.printStackTrace(); // Para ver el mensaje exacto del error
+            System.out.println(e.getMessage());
         }
         return send;
     }

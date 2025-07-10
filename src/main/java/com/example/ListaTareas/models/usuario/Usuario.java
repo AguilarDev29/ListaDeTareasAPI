@@ -1,6 +1,8 @@
 package com.example.ListaTareas.models.usuario;
+import com.example.ListaTareas.models.codigoVerificacion.CodigoVerificacion;
 import com.example.ListaTareas.models.tarea.Tarea;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,29 +27,32 @@ public class Usuario implements UserDetails {
     @Column(columnDefinition = "BIGINT UNSIGNED")
     private Long id;
     @NotBlank
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Email
+    private String email;
     @NotBlank
     @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tarea> tareas = new ArrayList<>();
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "usuario_roles",
             joinColumns = @JoinColumn(name = "usuario_id")
     )
     private List<String> roles = new ArrayList<>();
-    public Usuario(String username, String password) {
-        this.username = username;
+    private Boolean enabled;
+
+    public Usuario(String email, String password) {
+        this.email = email;
         this.password = password;
     }
-
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CodigoVerificacion> codigosVerificacion = new ArrayList<>();
 
     @PrePersist
     protected void onCreate(){
         this.roles = List.of(Rol.USER.name());
+        this.enabled = false;
     }
 
     @Override
@@ -58,7 +63,7 @@ public class Usuario implements UserDetails {
     // Spring usará este para el nombre de usuario
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
     public enum Rol {

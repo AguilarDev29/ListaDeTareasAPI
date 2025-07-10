@@ -9,5 +9,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Page<Usuario> findAllByEnabled(Pageable pageable, Boolean enabled);
 
-    Optional<Usuario> findByUsername(String username);
+    Optional<Usuario> findByEmail(String email);
 }

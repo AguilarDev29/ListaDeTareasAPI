@@ -1,7 +1,7 @@
 package com.example.ListaTareas.controllers;
 import com.example.ListaTareas.models.usuario.Usuario;
 import com.example.ListaTareas.models.usuario.dto.DtoCambiarPassword;
-import com.example.ListaTareas.models.usuario.dto.DtoCambiarUsername;
+import com.example.ListaTareas.models.usuario.dto.DtoCambiarEmail;
 import com.example.ListaTareas.models.usuario.dto.DtoInfoUsuario;
 import com.example.ListaTareas.models.usuario.dto.DtoRol;
 import com.example.ListaTareas.services.UsuarioService;
@@ -91,13 +91,13 @@ public class UsuarioController {
     }
 
     @PatchMapping("/username/{id}")
-    public ResponseEntity<Map<String, String>> changeUsernameAdmin(@RequestBody DtoCambiarUsername username,
+    public ResponseEntity<Map<String, String>> changeEmailAdmin(@RequestBody DtoCambiarEmail email,
                                                                     @PathVariable Long id,
                                                                     @AuthenticationPrincipal Usuario usuario) {
         try{
             var usuarioToUpdate = usuarioService.getUsuarioById(id);
-            if(!username.newUsername().isBlank())
-                usuarioService.changeUsername(username.newUsername(), id, usuario);
+            if(!email.newEmail().isBlank())
+                usuarioService.changeEmail(email.newEmail(), id, usuario);
         }catch(EntityNotFoundException e){
             return ResponseEntity.notFound().build();
         }

@@ -23,7 +23,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
             var token = JWT.create()
                     .withIssuer("Lista de tareas API")
-                    .withSubject(usuario.getUsername())
+                    .withSubject(usuario.getEmail())
                     .withClaim("id", usuario.getId())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
